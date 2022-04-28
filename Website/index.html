@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>GHOST | RANDOM SENSITIVITY</title>
+		<link rel="shortcut icon" type="image/svg" href="img/logotype.svg">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<style type="text/css">
+			html {
+				min-width: 320px;
+			}
+			.raised-block {
+				background-color: #fff;
+				margin-bottom: 10px;
+				margin-left: 0;
+				margin-right: -0.625rem;
+				padding-left: 0.625rem;
+				padding-right: 0.625rem;
+			}
+			.info-block-padding {
+				padding: 0.3rem;
+			}
+			@media (max-width: 33.9em) {
+				.raised-block {
+					margin-left: -0.625rem;
+				}
+			}
+			.row [class^="col-"]:first-child>.raised-block {
+				margin-left: -0.625rem;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-dark bg-dark sticky-top">
+			<div class="container">
+				<a class="navbar-brand" href="/">
+					<img src="img/logotype.svg" alt="Logotype" width="30" height="24" class="d-inline-block align-text-top">GHOST <span class="text-muted">RANDOM SENSITIVITY</span>
+				</a>
+			</div>
+		</nav>
+		<div class="container bg-light">
+			<br>
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">Sensitivity</span>
+				</div>
+				<input class="form-control text-center" type="number" id="Field-Sensitivity" name="Field-Sensitivity" placeholder="Sensitivity" readonly>
+				<div class="input-group-append">
+					<button class="btn btn-outline-primary" type="button" onclick="CopyInput('Field-Sensitivity');">Copy</button>
+				</div>
+			</div>
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">DPI</span>
+				</div>
+				<input class="form-control text-center" type="number" id="Field-DPI" name="Field-DPI" placeholder="DPI" readonly>
+				<div class="input-group-append">
+					<button class="btn btn-outline-primary" type="button" onclick="CopyInput('Field-DPI');">Copy</button>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<button class="col-md-6 btn btn-success btn-lg" onclick="GetSkillBtn();">GET SENSITIVITY</button>
+				</div>
+			</div>
+			<br>
+			<div class="row justify-content-center py-3">
+				<div class="text-center row">
+					<div class="col-sm">
+						<div class="raised-block border border-info info-block-padding">
+							<h5>Settings</h5>
+							<br>
+							<div class="input-group mb-3">
+								<span class="input-group-text">Min Sensitivity</span>
+								<input type="number" class="form-control" id="Field-Min-Sensitivity" placeholder="Min sensitivity" min="0" value="0.001">
+								<span class="input-group-text">Max Sensitivity</span>
+								<input type="number" class="form-control" id="Field-Max-Sensitivity" placeholder="Max sensitivity" min="0" value="10">
+							</div>
+							<div class="input-group mb-3">
+								<span class="input-group-text">Min DPI</span>
+								<input type="number" class="form-control" id="Field-Min-DPI" placeholder="Min DPI" min="1" value="1">
+								<span class="input-group-text">Max DPI</span>
+								<input type="number" class="form-control" id="Field-Max-DPI" placeholder="Max DPI" min="1" value="3200">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<footer class="d-flex flex-wrap py-3 border-top text-center">
+				<p class="col-md-12 mb-0 text-muted" id="copyright-text"></p>
+			</footer>
+		</div>
+		<script type="text/javascript">
+			const Field_Min_Sensitivity = document.getElementById("Field-Min-Sensitivity");
+			const Field_Max_Sensitivity = document.getElementById("Field-Max-Sensitivity");
+			const Field_Min_DPI = document.getElementById("Field-Min-DPI");
+			const Field_Max_DPI = document.getElementById("Field-Max-DPI");
+			const Field_Sensitivity = document.getElementById("Field-Sensitivity");
+			const Field_DPI = document.getElementById("Field-DPI");
+			function CopyInput(ID) {
+				let Element = document.getElementById(ID);
+				Element.select();
+				document.execCommand("copy");
+			}
+			function GetRandomSensitivity(RandomSensitivity) {
+				return (Math.random() * (RandomSensitivity[1] - RandomSensitivity[0]) + RandomSensitivity[0]).toFixed(3)
+			}
+			function GetRandomDPI(RandomDPI) {
+				return Math.floor(RandomDPI[0]+Math.random()*(RandomDPI[1]+1-RandomDPI[0]));
+			}
+			function GetSkillBtn() {
+				let RandomSensitivity = [0.001, 10];
+				let RandomDPI = [1, 3200];
+				if (parseInt(Field_Min_DPI.value) > 0) {
+					RandomDPI[0] = parseInt(Field_Min_DPI.value);
+				} else {
+					alert("Invalid Min DPI. The default values are set.");
+					Field_Max_DPI.value = RandomDPI[0];
+				}
+				if (parseInt(Field_Max_DPI.value) > 0) {
+					if (parseInt(Field_Max_DPI.value) >= parseInt(Field_Min_DPI.value)) {
+						RandomDPI[1] = parseInt(Field_Max_DPI.value);
+					} else {
+						alert("Minimum DPI is greater than maximum DPI. The default values are set.");
+						Field_Min_DPI.value = RandomDPI[0];
+						Field_Max_DPI.value = RandomDPI[1];
+					}
+				} else {
+					if (parseInt(Field_Min_DPI.value) <= RandomDPI[1]) {
+						RandomDPI[1] = parseInt(Field_Min_DPI.value);
+					}
+					alert("Invalid Max DPI. The default values are set.");
+					Field_Max_DPI.value = RandomDPI[1];
+				}
+				if (parseFloat(Field_Min_Sensitivity.value) > 0) {
+					RandomSensitivity[0] = parseFloat(Field_Min_Sensitivity.value);
+				} else {
+					alert("Invalid Min Sensitivity. The default values are set.");
+					Field_Min_Sensitivity.value = RandomSensitivity[0];
+				}
+				if (parseFloat(Field_Max_Sensitivity.value) > 0) {
+					if (parseFloat(Field_Max_Sensitivity.value) >= parseFloat(Field_Min_Sensitivity.value)) {
+						RandomSensitivity[1] = parseFloat(Field_Max_Sensitivity.value);
+					} else {
+						alert("Minimum Sensitivity is greater than maximum Sensitivity. The default values are set.");
+						Field_Min_Sensitivity.value = RandomSensitivity[0];
+						Field_Max_Sensitivity.value = RandomSensitivity[1];
+					}
+				} else {
+					if (parseFloat(Field_Min_Sensitivity.value) <= RandomSensitivity[1]) {
+						RandomSensitivity[1] = parseFloat(Field_Min_Sensitivity.value);
+					}
+					alert("Invalid Max Sensitivity. The default values are set.");
+					Field_Max_Sensitivity.value = RandomSensitivity[1];
+				}
+				Field_Sensitivity.value = GetRandomSensitivity(RandomSensitivity);
+				Field_DPI.value = GetRandomDPI(RandomDPI);
+			}
+			document.getElementById("copyright-text").innerHTML = "© " + new Date().getFullYear() + " GHOST";
+		</script>
+	</body>
+</html>
